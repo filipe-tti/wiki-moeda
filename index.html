@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style.css">
+    <title>WikiMoeda</title>
+</head>
+<body>
+    <header>
+        <h1>WIKIMOEDA</h1>
+        <nav>
+            <a href="#">Cotação</a>
+            <a href="#">WiKI</a>
+            <a href="#">Notícias</a>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h2>WikiMoeda</h2>
+        <p>Fique atualizado com as últimas cotações, notícias e informações detalhadas sobre diversas moedas, incluindo dolar, real e bitcoin.</p>
+    </section>
+
+    <div class="cta">
+        <p>Dólar em disparada: entenda a alta da moeda e o que vem pela frente</p>
+    </div>
+
+    <section class="live-rates">
+        <h3>Moedas ao vivo</h3>
+        <table>
+            <thead>
+
+                <tr>
+                    <th>Moeda</th>
+                    <th>Preço</th>
+                    <th>Mudança / 24hrs</th>
+                </tr>
+
+                <tbody id="rates-body">
+                    <tr>
+                        <td>GBP | Libras</td>
+                        <td id="usd-price">-</td>
+                        <td id="usd-change" class="changer"></td>
+                    </tr>
+                    <tr>
+                        <td>USD | Dólar americano</td>
+                        <td id="gbp-price">-</td>
+                        <td id="gbp-change" class="changer"></td>
+                    </tr>
+                </tbody>
+              
+            </thead>
+        </table>
+    </section>
+
+    <script>
+        async function getValues() {
+            try{
+                const response = await fetch('http://economia.awesomeapi.com.br/json/last/USD-BRL,GBP-BRL')
+
+                const data= await response.json();
+
+                const usdRate = data.USDBRL;
+                const gbpRate = data.GBPBRL;
+
+                const usdChangeElement = document.getElementById('usd-change');
+
+                const gbpChangeElement = document.getElementById('gbp-change');
+
+                document.getElementById('usd-price').textContent = parseFloat(usdRate.bid).toFixed(2);
+
+                document.getElementById('gbp-price').textContent = parseFloat(gbpRate.bid).toFixed(2);
+
+                usdChangeElement.textContent = `${parseFloat(usdRate.pctChange).toFixed(2)}% ${usdRate.pctChange > 0 ? '⭡' : '🠓'}`;
+
+                gbpChangeElement.textContent = `${parseFloat(gbpRate.pctChange).toFixed(2)}% ${gbpRate.pctChange > 0 ? '⭡' : '🠓'}`;
+
+                if (usdRate.pctChange >0)  {
+                    usdChangeElement.style.color = 'green'
+                } else{
+                    usdChangeElement.style.color = 'red'
+                }
+
+
+                   if (gbpRate.pctChange >0)  {
+                    gbpChangeElement.style.color = 'green'
+                } else{
+                    gbpChangeElement.style.color = 'red'
+                }
+
+            }catch(error){
+
+            }
+        }
+
+        getValues();
+    </script>
+
+</body>
+</html>
